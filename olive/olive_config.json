@@ -341,6 +341,12 @@
             "supported_accelerators": [ "gpu" ],
             "supported_precisions": [ "int4", "int8", "fp8" ],
             "extra_dependencies": [ "nvmo" ]
+        },
+        "QNPUEPContextGenerator": {
+            "module_path": "olive.passes.onnx.epcontext_generator.QNPUEPContextGenerator",
+            "supported_providers": [ "QNNExecutionProvider" ],
+            "supported_accelerators": [ "npu" ],
+            "supported_precisions": [ "*" ]
         }
     },
     "extra_dependencies": {
