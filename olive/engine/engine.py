@@ -364,15 +364,18 @@ class Engine:
         else:
             return None
 
+    def get_target_device(self):
+        return self.target_config.config.accelerators[0].device if self.target_config.config.accelerators else None
+
     def setup_passes(self, accelerator_spec: "AcceleratorSpec"):
-        host_device = self.get_host_device()
         # clean the passes
         self.passes.clear()
         for name, config in self.pass_config.items():
             pass_cls: Type[Pass] = config["type"]
             pass_cfg = config["config"]
             pass_cfg = pass_cls.generate_search_space(accelerator_spec, pass_cfg, self.search_strategy is None)
-            p = pass_cls(accelerator_spec, pass_cfg, host_device)
+            device = self.get_target_device() if pass_cls.run_on_target else self.get_host_device()
+            p = pass_cls(accelerator_spec, pass_cfg, device)
             self.register_pass(p, name=name, host=config["host"], evaluator_config=config["evaluator"])
 
         # list of passes starting from the first pass with non-empty search space
