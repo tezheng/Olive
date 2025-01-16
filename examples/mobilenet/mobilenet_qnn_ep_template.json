@@ -9,7 +9,7 @@
             "type": "IsolatedORT",
             "python_environment_path": "<qnn_env_path>",
             "accelerators": [ { "execution_providers": [ "QNNExecutionProvider" ] } ],
-            "preprend_to_path": [ "<qnn_lib_path>" ]
+            "prepend_to_path": [ "<qnn_lib_path>" ]
         }
     },
     "data_configs": [

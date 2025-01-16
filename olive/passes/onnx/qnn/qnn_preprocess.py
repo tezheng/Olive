@@ -119,4 +119,12 @@ class QNNPreprocess(Pass):
         )
         if not modified:
             return model
-        return ONNXModelHandler(output_model_path)
+
+        return (
+            ONNXModelHandler(
+                model_path=Path(output_model_path).parent,
+                onnx_file_name=Path(output_model_path).name,
+            )
+            if config["save_as_external_data"]
+            else ONNXModelHandler(output_model_path)
+        )
