@@ -12,6 +12,8 @@ from numbers import Number
 from pathlib import Path
 from typing import TYPE_CHECKING, Any, Dict, List, NamedTuple, Tuple, Union
 
+from tqdm import tqdm
+
 import numpy as np
 import torch
 
@@ -440,7 +442,7 @@ class OnnxEvaluator(_OliveEvaluator, OnnxEvaluatorMixin):
         logits_dict = collections.defaultdict(list)
         output_names = io_config["output_names"]
         is_single_tensor_output = len(output_names) == 1
-        for input_data, labels in dataloader:
+        for input_data, labels in tqdm(dataloader):
             input_feed = OnnxEvaluator.format_input(input_data, io_config)
             result = model.run_session(session, input_feed, **run_kwargs)
             if is_single_tensor_output:
@@ -462,7 +464,7 @@ class OnnxEvaluator(_OliveEvaluator, OnnxEvaluatorMixin):
         if is_single_tensor_output:
             logits = torch.cat(logits, dim=0)
         else:
-            logits = {k: torch.cat(logits[k], dim=0) for k in output_names}
+            logits = {k: torch.cat(logits_dict[k], dim=0) for k in output_names}
 
         tuning_result_file = inference_settings.get("tuning_result_file")
         if tuning_result_file:
